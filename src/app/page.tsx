@@ -7,7 +7,6 @@ const Page = async () => {
   await requireAuth();
 
   const data = await caller.getUsers();
-  console.log({ data });
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <Image src="/logo.svg" alt="logo" width={100} height={100} />
