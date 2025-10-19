@@ -20,6 +20,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { GithubIcon } from 'lucide-react';
 import { loginSchema, LoginSchemaType } from '@/lib/schema';
 import { authClient } from '@/lib/auth-client';
+import Image from 'next/image';
 
 export function LoginForm() {
   const searchParams = useSearchParams();
@@ -58,7 +59,22 @@ export function LoginForm() {
   };
 
   const handleSocialLogin = async (provider: 'google' | 'github') => {
-    setIsSocialPending(async () => {});
+    setIsSocialPending(async () => {
+      await authClient.signIn.social(
+        {
+          provider,
+        },
+        {
+          onSuccess: () => {
+            toast.success('You have successfully signed in!');
+            router.push(redirect);
+          },
+          onError: (ctx) => {
+            toast.error(ctx.error.message);
+          },
+        }
+      );
+    });
   };
 
   return (
@@ -68,9 +84,21 @@ export function LoginForm() {
         className="bg-muted m-auto h-fit w-full max-w-md overflow-hidden rounded-[calc(var(--radius)+.125rem)] border shadow-md shadow-zinc-950/5 dark:[--color-muted:var(--color-zinc-900)]"
       >
         <div className="bg-card -m-px rounded-[calc(var(--radius)+.125rem)] border p-8 pb-6">
+          <Link
+            href="/"
+            className="flex items-center gap-2 self-center font-medium"
+          >
+            <Image
+              src="/logo.svg"
+              alt="Workflow Automation Logo"
+              width={30}
+              height={30}
+            />
+            Workflow
+          </Link>
           <div>
-            <h1 className="mb-1 mt-4 text-xl font-semibold">Welcome Back!</h1>
-            <p className="text-sm">Sign in with your Email or Github account</p>
+            <h1 className="mt-4 text-xl font-semibold">Welcome Back!</h1>
+            <p className="text-sm">Sign in with your Email or Social account</p>
           </div>
 
           <div className="mt-6 space-y-6">
