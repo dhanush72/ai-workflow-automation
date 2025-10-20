@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/sidebar';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
+import { useHasActiveSubscription } from '@/features/subscriptions/use-subscription';
 
 export function NavUser({
   user,
@@ -38,6 +39,7 @@ export function NavUser({
 }) {
   const router = useRouter();
   const { isMobile } = useSidebar();
+  const { hasActiveSubscription, isLoading } = useHasActiveSubscription();
 
   return (
     <SidebarMenu>
@@ -83,18 +85,19 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
+              {!isLoading && !hasActiveSubscription && (
+                <DropdownMenuItem
+                  onClick={() =>
+                    authClient.checkout({
+                      slug: 'ai-workflow-pro',
+                    })
+                  }
+                >
+                  <Sparkles />
+                  Upgrade to Pro
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem onClick={() => authClient.customer.portal()}>
                 <CreditCard />
                 Billing
               </DropdownMenuItem>
