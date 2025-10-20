@@ -3,6 +3,8 @@ import { requireAuth } from '@/lib/auth-session';
 import {
   WorkflowLists,
   WorkflowsContainer,
+  WorkflowsLoading,
+  WorkflowsError,
 } from '@/features/workflows/components/workflows';
 import { prefetchWorkflows } from '@/features/workflows/server/prefetch';
 import { HydrateClient } from '@/trpc/server';
@@ -24,8 +26,8 @@ const WorkflowPage = async ({ searchParams }: WorkflowProps) => {
   return (
     <WorkflowsContainer>
       <HydrateClient>
-        <ErrorBoundary fallback={<div>Error</div>}>
-          <Suspense fallback={<div>Loading...</div>}>
+        <ErrorBoundary fallback={<WorkflowsError />}>
+          <Suspense fallback={<WorkflowsLoading />}>
             <WorkflowLists />
           </Suspense>
         </ErrorBoundary>
