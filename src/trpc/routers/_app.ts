@@ -1,9 +1,9 @@
 import { createTRPCRouter, protectedProcedure } from '@/trpc/init';
 import { prisma } from '@/lib/db';
 import { inngest } from '@/inngest/client';
+
 export const appRouter = createTRPCRouter({
   getUsers: protectedProcedure.query(({ ctx }) => {
-    console.log({ userId: ctx.auth.user.id });
     return prisma.user.findMany({
       where: {
         id: ctx.auth.user.id,
@@ -24,6 +24,11 @@ export const appRouter = createTRPCRouter({
       data: {
         name: 'Test workflow',
       },
+    });
+  }),
+  testAi: protectedProcedure.mutation(async () => {
+    return await inngest.send({
+      name: 'execute/ai',
     });
   }),
 });

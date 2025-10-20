@@ -6,10 +6,11 @@ import Image from 'next/image';
 const Page = async () => {
   await requireAuth();
 
-  const data = await caller.getUsers();
+  const data = await caller.testAi();
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <Image src="/logo.svg" alt="logo" width={100} height={100} />
+      <Image src="/logo.svg" alt="logo" width={60} height={60} />
       <p>You are logged in!</p>
       <div>{JSON.stringify(data, null, 2)}</div>
       <LogoutBtn />
