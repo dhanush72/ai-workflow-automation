@@ -24,7 +24,7 @@ import Image from 'next/image';
 
 export function LoginForm() {
   const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/';
+  const redirect = searchParams.get('redirect') || '/workflows';
 
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
