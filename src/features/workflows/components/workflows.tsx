@@ -24,9 +24,7 @@ export const WorkflowsHeader = ({ disabled }: { disabled?: boolean }) => {
       onSuccess: (data) => {
         router.push(`/workflows/${data.id}`);
       },
-      onError: (error) => {
-        handleError(error);
-      },
+      onError: handleError,
     });
   };
   return (
