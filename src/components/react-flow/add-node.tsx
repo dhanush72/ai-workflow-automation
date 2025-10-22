@@ -1,14 +1,18 @@
 'use client';
 
+import { NodeSelector } from '@/components/react-flow/node-selector';
 import { Button } from '@/components/ui/button';
 import { PlusIcon } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 
 export const AddNodeBtn = memo(() => {
+  const [selectorOpen, setSelectorOpen] = useState(false);
   return (
-    <Button size="icon" variant="outline" className="bg-background">
-      <PlusIcon />
-    </Button>
+    <NodeSelector open={selectorOpen} onOpenChange={setSelectorOpen}>
+      <Button size="icon" variant="outline" className="bg-background">
+        <PlusIcon />
+      </Button>
+    </NodeSelector>
   );
 });
 
