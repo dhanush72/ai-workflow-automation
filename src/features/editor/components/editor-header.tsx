@@ -10,10 +10,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Spinner } from '@/components/ui/spinner';
 import {
   useSuspenseWorkflow,
+  useUpdateWorkflow,
   useUpdateWorkflowName,
 } from '@/features/workflows/hooks/use-workflows';
+import { editorAtom } from '@/store/atom';
+import { useAtomValue } from 'jotai';
 import { SaveIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -42,10 +46,34 @@ export const EditorHeader = ({
 };
 
 export const EditorSaveButton = ({ workflowId }: { workflowId: string }) => {
+  const editor = useAtomValue(editorAtom);
+  const { mutate, isPending } = useUpdateWorkflow();
+
+  const handleSave = () => {
+    if (!editor) return;
+
+    const nodes = editor.getNodes();
+    const edges = editor.getEdges();
+
+    mutate({
+      id: workflowId,
+      nodes,
+      edges,
+    });
+  };
   return (
-    <Button size="sm" onClick={() => {}}>
-      <SaveIcon className="size-4" />
-      Save
+    <Button size="sm" onClick={handleSave} disabled={isPending}>
+      {isPending ? (
+        <>
+          <Spinner />
+          Saving...
+        </>
+      ) : (
+        <>
+          <SaveIcon className="size-4" />
+          Save
+        </>
+      )}
     </Button>
   );
 };

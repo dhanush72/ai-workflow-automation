@@ -4,6 +4,7 @@ import { ErrorView, LoadingView } from '@/components/entity-components';
 import { AddNodeBtn } from '@/components/react-flow/add-node';
 import { nodeComponents } from '@/config/node-component';
 import { useSuspenseWorkflow } from '@/features/workflows/hooks/use-workflows';
+import { editorAtom } from '@/store/atom';
 import {
   ReactFlow,
   applyNodeChanges,
@@ -19,9 +20,12 @@ import {
   Panel,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { useSetAtom } from 'jotai';
 import { useCallback, useState } from 'react';
 
 export const Editor = ({ workflowId }: { workflowId: string }) => {
+  const setEditor = useSetAtom(editorAtom);
+
   const { data: workflow } = useSuspenseWorkflow(workflowId);
   const [nodes, setNodes] = useState<Node[]>(workflow.nodes);
   const [edges, setEdges] = useState<Edge[]>(workflow.edges as Edge[]);
@@ -51,11 +55,17 @@ export const Editor = ({ workflowId }: { workflowId: string }) => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onInit={setEditor}
         proOptions={{
           hideAttribution: true,
         }}
         colorMode="dark"
         fitView
+        snapGrid={[10, 10]}
+        snapToGrid
+        panOnScroll
+        panOnDrag={false}
+        selectionOnDrag
       >
         <Background />
         <Controls />

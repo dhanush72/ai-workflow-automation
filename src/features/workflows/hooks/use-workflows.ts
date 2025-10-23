@@ -77,3 +77,22 @@ export const useRemoveWorkflow = () => {
     })
   );
 };
+
+export const useUpdateWorkflow = () => {
+  const queryclient = useQueryClient();
+  const trpc = useTRPC();
+
+  return useMutation(
+    trpc.workflows.update.mutationOptions({
+      onSuccess: (data) => {
+        toast.success(`Workflow ${data.name} saved`);
+        queryclient.invalidateQueries(
+          trpc.workflows.getWorkflowById.queryOptions({ id: data.id })
+        );
+      },
+      onError: (error) => {
+        toast.error(`Failed to update workflow: ${error.message}`);
+      },
+    })
+  );
+};
